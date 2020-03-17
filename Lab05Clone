@@ -1,0 +1,158 @@
+import java.util.Scanner;
+import java.lang.String;
+
+public class ConnectFour {
+
+    public static void printBoard(char[][] arr) {
+        // arranges game to settings that player inputs
+        for (int row = arr.length - 1; row >= 0; row--){
+
+            for (int col = 0; col < arr[0].length; col++) {
+
+                System.out.print(arr[row][col]);
+
+            }
+            System.out.println();
+        }
+
+    }
+
+    public static void initializeBoard(char[][] arr) {
+        // creates board display
+        //THIS IS A NEW COMMENT
+        for (int row = 0; row < arr.length; row++){
+            
+            for (int col = 0; col < arr[0].length; col++) {
+                arr[row][col] = '-';
+            }
+        }
+
+    }
+
+    public static int insertChip(char[][] arr, int col, char chipType) {
+
+        // determines player's chip placement
+
+
+        for (int row = 0; row < arr.length; row++) {
+            if (arr[row][col] == '-') {
+
+                arr[row][col] = chipType;
+                return row;
+            }
+        }
+
+        return -1;
+    }
+
+    public static boolean checkIfWinner(char[][] arr, int col, int row,char chipType) {
+        // checks for winner after each round
+        for (row = arr.length - 1; row >= 3; row--) {
+
+
+            for (col = arr[0].length - 1; col >= 0; col--) {
+
+
+
+                if (arr[row][col] == arr[row-1][col] && arr[row][col] == arr[row-2][col] && arr[row][col] == arr[row-3][col] && arr[row][col] == chipType) {
+
+                    return true;
+                }
+            }
+        }
+
+        for (col = arr[0].length - 1; col >= 3; col--) {
+            for (row = arr.length - 1; row >= 0; row--) {
+
+                if (arr[row][col] == arr[row][col-1] && arr[row][col] == arr[row][col-2] && arr[row][col] == arr[row][col-3] && arr[row][col] == chipType) {
+
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static void main(String[] args) {
+
+
+        Scanner scanObject = new Scanner(System.in);
+        int vert = 0;
+        int hor = 0;
+        int turns = 0;
+
+
+        System.out.println("What would you like the height of the board to be? ");
+        vert = scanObject.nextInt();
+
+        System.out.println("What would you like the length of the board to be? ");
+        hor = scanObject.nextInt();
+// these two inputs allow the player to determine the size of the board
+        int area = vert * hor;
+
+        char[][] game= new char[vert][hor];
+
+        initializeBoard(game);
+        printBoard(game);
+
+        System.out.print("Player 1: x\n" + "Player 2: o\n");
+
+        while (true) {
+            System.out.println("Player 1: Which column would you like to choose? ");
+// determines where player will drop piece
+
+            int col1 = scanObject.nextInt();
+
+            turns++;
+            char chipType1 = 'x';
+
+            int p1 = insertChip(game, col1, chipType1);
+
+            printBoard(game);
+            if (turns == area) {
+                System.out.println("Draw. Nobody wins.");
+
+                System.exit(0);
+
+
+                break;
+            }
+            if (checkIfWinner(game, vert, hor, chipType1)) {
+
+                System.out.println("Player 1 won the game!");
+
+                System.exit(0);
+                break;
+            }
+
+            System.out.println("Player 2: Which column would you like to choose? ");
+
+
+            int col2 = scanObject.nextInt();
+
+            turns++;
+            char chipType2 = 'o';
+
+            int p2 = insertChip(game, col2, chipType2);
+
+
+            printBoard(game);
+            if (turns == area) {
+                // basically states if the board fills with no consecutive sets of four, nobody wins
+                System.out.println("Draw. Nobody wins.");
+
+                System.exit(0);
+                break;
+            }
+            if (checkIfWinner(game, vert, hor, chipType2)) {
+
+                System.out.println("Player 2 won the game!");
+                System.exit(0);
+                break;
+            }
+
+        }
+
+
+    }
+}
